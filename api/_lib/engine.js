@@ -314,28 +314,21 @@ async function encodeGIF(frames, options) {
   const width = frames[0].width;
   const height = frames[0].height;
 
-  return new Promise((resolve, reject) => {
-    const encoder = new GIFEncoder(width, height, 'neuquant', false);
-    encoder.setQuality(options.quality || config.DEFAULT_QUALITY);
-    encoder.setDelay(options.delay || 65);
-    encoder.setRepeat(0);
+  const encoder = new GIFEncoder(width, height, 'neuquant', false);
+  encoder.setQuality(options.quality || config.DEFAULT_QUALITY);
+  encoder.setDelay(options.delay || 65);
+  encoder.setRepeat(0);
 
-    encoder.on('error', reject);
-    encoder.on('progress', () => {});
-    encoder.on('finish', () => {
-      const buf = encoder.out.getData();
-      resolve(buf);
-    });
+  encoder.start();
 
-    encoder.start();
+  for (const frame of frames) {
+    const ctx = frame.getContext('2d');
+    encoder.addFrame(ctx);
+  }
 
-    for (const frame of frames) {
-      const ctx = frame.getContext('2d');
-      encoder.addFrame(ctx);
-    }
+  encoder.finish();
 
-    encoder.finish();
-  });
+  return encoder.out.getData();
 }
 
 module.exports = { generateMeme, encodeGIF, drawAvatar, drawTextOnCanvas };
