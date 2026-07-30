@@ -6,7 +6,7 @@
     "vercel-build": "echo 'Frontend is pre-built, API only'"
   },
   "dependencies": {
-    "canvas": "^2.11.2",
+    "@napi-rs/canvas": "^0.1.65",
     "gif-encoder-2": "^1.0.5",
     "busboy": "^1.6.0"
   }
